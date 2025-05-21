@@ -2,8 +2,8 @@
 /**
  * cargo.h — simple single-header CLI parsing library for C.
  */
-#ifndef CARGO_H
-#define CARGO_H
+#ifndef CARGO_H_
+#define CARGO_H_
 
 #include <stdarg.h>
 #include <stddef.h>
@@ -140,7 +140,7 @@ typedef struct {
   int req;
 } cli_pos_t;
 
-typedef int (*cli_cmd_handler_t)(cli_t*, int, char*const[]);
+typedef int (*cli_cmd_handler_t)(cli_t *, int, char *const[]);
 
 typedef struct {
   const char *name;
@@ -567,4 +567,4 @@ static inline int cparse(cli_t *c, int argc, char *const argv[]) {
 }
 #endif
 
-#endif /* CARGO_H */
+#endif /* CARGO_H_ */
