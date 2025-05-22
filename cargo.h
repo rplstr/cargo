@@ -28,7 +28,7 @@ extern "C" {
 #define CARGO_FREE free
 #endif
 #ifndef CARGO_GEN_HELP
-#define CARGO_GEN_HELP chelp
+#define CARGO_GEN_HELP cargo_help
 #endif
 
 /* requirement: optional or required */
@@ -54,7 +54,7 @@ extern "C" {
 #endif
 
 #ifndef CARGO_PERROR
-#define CARGO_PERROR(...) cperror(__VA_ARGS__)
+#define CARGO_PERROR(...) cargo_perror(__VA_ARGS__)
 #endif
 
 #ifndef CARGO_NAME_MAX
@@ -165,12 +165,12 @@ struct cli {
 };
 
 /**
- * cnew — allocate a new CLI parser
+ * cargo_new — allocate a new CLI parser
  * @prog: program name (argv[0])
  * @desc: description for help
  * returns: cli_t* or NULL on failure
  */
-static inline cli_t *cnew(const char *prog, const char *desc) {
+static inline cli_t *cargo_new(const char *prog, const char *desc) {
   cli_t *c = CARGO_ALLOC(sizeof(*c));
   if (!c)
     return NULL;
@@ -181,7 +181,7 @@ static inline cli_t *cnew(const char *prog, const char *desc) {
 }
 
 /* default error printer */
-static inline void cperror(const char *fmt, ...) {
+static inline void cargo_perror(const char *fmt, ...) {
   va_list ap;
   va_start(ap, fmt);
   fprintf(stderr, "cargo: \033[1;31merror\033[0m: ");
@@ -191,16 +191,16 @@ static inline void cperror(const char *fmt, ...) {
 }
 
 /**
- * cfree — free parser
+ * cargo_free — free parser
  * @c: parser handle
  */
-static inline void cfree(cli_t *c) { CARGO_FREE(c); }
+static inline void cargo_free(cli_t *c) { CARGO_FREE(c); }
 
 /**
- * cflag — register a boolean flag
+ * cargo_flag — register a boolean flag
  * returns: 0 on success, -1 on error
  */
-static inline int cflag(cli_t *c, const cli_flag_t *f) {
+static inline int cargo_flag(cli_t *c, const cli_flag_t *f) {
   if (!c || !f || !f->dest || c->nflag >= CLI_MAX_FLAGS)
     return -1;
   /* uniqueness of flag char/name */
@@ -224,9 +224,9 @@ static inline int cflag(cli_t *c, const cli_flag_t *f) {
 }
 
 /**
- * copt — register a string option
+ * cargo_option — register a string option
  */
-static inline int copt(cli_t *c, const cli_opt_t *o) {
+static inline int cargo_option(cli_t *c, const cli_opt_t *o) {
   if (!c || !o || !o->dest || c->nopt >= CLI_MAX_OPTS)
     return -1;
   /* uniqueness of option char/name */
@@ -248,9 +248,9 @@ static inline int copt(cli_t *c, const cli_opt_t *o) {
 }
 
 /**
- * cenum — register an enumerated option
+ * cargo_enum — register an enumerated option
  */
-static inline int cenum(cli_t *c, const cli_enum_t *e) {
+static inline int cargo_enum(cli_t *c, const cli_enum_t *e) {
   if (!c || !e || !e->dest || !e->choices || c->nenm >= CLI_MAX_ENUMS)
     return -1;
   /* uniqueness of enum char/name */
@@ -272,9 +272,9 @@ static inline int cenum(cli_t *c, const cli_enum_t *e) {
 }
 
 /**
- * cpos — register a positional argument
+ * cargo_positional — register a positional argument
  */
-static inline int cpos(cli_t *c, const cli_pos_t *p) {
+static inline int cargo_positional(cli_t *c, const cli_pos_t *p) {
   if (!c || !p || !p->dest || c->npos >= CLI_MAX_POS)
     return -1;
   /* uniqueness of positional name */
@@ -288,9 +288,9 @@ static inline int cpos(cli_t *c, const cli_pos_t *p) {
 }
 
 /**
- * ccmd — register a subcommand
+ * cargo_subcommand — register a subcommand
  */
-static inline int ccmd(cli_t *c, const cli_cmd_t *cmd) {
+static inline int cargo_subcommand(cli_t *c, const cli_cmd_t *cmd) {
   if (!c || !cmd || !cmd->name || c->ncmd >= CLI_MAX_CMDS)
     return -1;
   for (size_t j = 0; j < c->ncmd; j++)
@@ -301,9 +301,9 @@ static inline int ccmd(cli_t *c, const cli_cmd_t *cmd) {
 }
 
 /**
- * chelp — print usage/help
+ * cargo_help — print usage/help
  */
-static inline void chelp(const cli_t *c) {
+static inline void cargo_help(const cli_t *c) {
   size_t i, j;
   printf("usage: %s", c->prog);
   if (c->ncmd)
@@ -341,7 +341,7 @@ static inline void chelp(const cli_t *c) {
   }
 }
 
-/* cparse helpers */
+/* cargo_parse helpers */
 static inline int handle_named(cli_t *c, const char *name, const char *val) {
   /* boolean flags */
   for (size_t j = 0; j < c->nflag; j++) {
@@ -491,9 +491,9 @@ static inline int parse_short(cli_t *c, char *arg, size_t *idx, int argc,
 }
 
 /**
- * cparse — parse argc/argv with configurable alloc/free/help
+ * cargo_parse — parse argc/argv with configurable alloc/free/help
  */
-static inline int cparse(cli_t *c, int argc, char *const argv[]) {
+static inline int cargo_parse(cli_t *c, int argc, char *const argv[]) {
   size_t i, pos = 0;
   int rc;
   for (i = 1; i < (size_t)argc; i++) {

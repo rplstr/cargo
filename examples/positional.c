@@ -4,15 +4,15 @@
 
 int main(int argc, char **argv) {
   char *file = NULL;
-  cli_t *cli = cnew(argv[0], "Positional example");
+  cli_t *cli = cargo_new(argv[0], "Positional example");
   cli_pos_t P = {"FILE", "Input file path", &file, CARGO_REQUIRED};
-  cpos(cli, &P);
-  if (cparse(cli, argc, (char *const *)argv) != CARGO_ERROR_OK) {
+  cargo_positional(cli, &P);
+  if (cargo_parse(cli, argc, (char *const *)argv) != CARGO_ERROR_OK) {
     CARGO_GEN_HELP(cli);
-    cfree(cli);
+    cargo_free(cli);
     return 1;
   }
   printf("file=%s\n", file);
-  cfree(cli);
+  cargo_free(cli);
   return 0;
 }
