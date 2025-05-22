@@ -1,7 +1,3 @@
-# Examples
-
-This directory contains standalone demos of each CLI feature provided by cargo.h.
-
 ## Flag Example
 
 Demonstrates a boolean flag (`-v`/`--verbose`) that toggles verbose mode.
